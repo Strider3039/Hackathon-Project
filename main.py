@@ -5,10 +5,10 @@ import pygame
 background_color = (169, 169, 169)
 
 # set screen size
-screen = pygame.display.set_mode(800, 800)
+screen = pygame.display.set_mode((800, 800))
 
 #window name
-pygame.display.set_catpion("Sticker Maker")
+pygame.display.set_caption("Sticker Maker")
 screen.fill(background_color)
 
 # update screen information
