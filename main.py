@@ -25,8 +25,6 @@ pygame.display.flip()
 
 running = True
 
-
-
 # window running loop
 while running:
 
