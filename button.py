@@ -1,56 +1,37 @@
 import pygame
-from button import Button
 
-# Initialize Pygame
 pygame.init()
 
-# Get screen width and height from Pygame
-screenWidth = pygame.display.Info().current_w
-screenHeight = pygame.display.Info().current_h
+FONT_COLOR = (255, 255, 255)
 
-background_color = (169, 169, 169)
+# Ensure the font is initialized properly before using it
+font = pygame.font.Font(None, 40)
 
-# Set the screen size (convert to integers)
-screen = pygame.display.set_mode((int(screenWidth / 2), int(screenHeight / 2)))
+class Button:
+    
+    def __init__(self, x, y, width, height, button_color, text, action=None):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.buttonColor = button_color
+        
+        # Modify hover color by adding a small amount to each color component
+        self.hoverButtonColor = tuple(min(255, c + 50) for c in button_color)  # Correct hover color calculation
+        
+        self.text = text
+        self.action = action
 
-# Window name
-pygame.display.set_caption("Sticker Maker")
-screen.fill(background_color)
+    def draw(self, screen):
+        mouse_pos = pygame.mouse.get_pos()
 
-# Update screen information
-pygame.display.flip()
+        # Change color on mouse hover
+        current_color = self.hoverButtonColor if self.rect.collidepoint(mouse_pos) else self.buttonColor
 
-def start_game():
-    print("Start Game clicked!")
+        # Draw button 
+        pygame.draw.rect(screen, current_color, self.rect, border_radius=10)
+        text_surface = font.render(self.text, True, FONT_COLOR)
+        text_rect = text_surface.get_rect(center=self.rect.center)
+        screen.blit(text_surface, text_rect)
 
-# Button setup
-WHITE = (255, 255, 255)
-BLUE = (0, 100, 255)
-DARK_BLUE = (0, 50, 200)
-startButton = Button(200, 150, 200, 50, BLUE, "Start Game", start_game)
-
-running = True
-
-# Window running loop
-while running:
-
-    for event in pygame.event.get():
-
-        # Check for QUIT event       
-        if event.type == pygame.QUIT: 
-            running = False
-        # Key press processor
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:  # Directly check the key event
-                running = False
-
-        # Check if the button is clicked
-        startButton.check_click(event)
-
-    # Draw the button
-    startButton.draw(screen)
-
-    # Update the display
-    pygame.display.flip()
-
-pygame.quit()
+    def check_click(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos) and self.action:
+                self.action()
