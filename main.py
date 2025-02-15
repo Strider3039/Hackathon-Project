@@ -1,7 +1,7 @@
 import tkinter as tk
 import pygame
-import Button
-
+from button import Button
+import trace
 
 
 # gets the root to the tkinter library
