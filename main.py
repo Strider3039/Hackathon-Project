@@ -1,5 +1,8 @@
 import tkinter as tk
 import pygame
+import Button
+
+
 
 # gets the root to the tkinter library
 root = tk.Tk()
@@ -8,29 +11,38 @@ root = tk.Tk()
 screenWidth = root.winfo_screenwidth()
 screenHeight = root.winfo_screenheight()
 
-background_color = (169, 169, 169)
+backgroundColor = (169, 169, 169)
 
 # set screen size
 screen = pygame.display.set_mode((screenWidth / 2, screenHeight / 2))
 
 #window name
 pygame.display.set_caption("Sticker Maker")
-screen.fill(background_color)
+screen.fill(backgroundColor)
 
 # update screen information
 pygame.display.flip()
 
 running = True
 
+
+
 # window running loop
 while running:
 
-    for event in pygame.event.get():
+    # a list of true or false bools based on if the key provided is pressed or not
+    # updated ever iteration
+    keys = pygame.key.get_pressed()
+    tracing = keys[pygame.K_LSHIFT]
 
+    for event in pygame.event.get():
         # Check for QUIT event       
         if event.type == pygame.QUIT: 
             running = False
-        # key press processor
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:  # Directly check the key event
-                running = False
+        
+    if keys[pygame.K_ESCAPE]:
+        running = False
+
+    # if the tracing key is pressed run the tracing function
+    if tracing:
+        pass
