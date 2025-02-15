@@ -4,17 +4,14 @@ from button import Button
 import trace
 
 
-# gets the root to the tkinter library
-root = tk.Tk()
-
 # gets user system screen width and height
-screenWidth = root.winfo_screenwidth()
-screenHeight = root.winfo_screenheight()
+screenWidth = pygame.display.Info().current_w
+screenHeight = pygame.display.Info().current_h
 
 backgroundColor = (169, 169, 169)
 
 # set screen size
-screen = pygame.display.set_mode((screenWidth / 2, screenHeight / 2))
+screen = pygame.display.set_mode((int(screenWidth / 2), int(screenHeight / 2)))
 
 #window name
 pygame.display.set_caption("Sticker Maker")
