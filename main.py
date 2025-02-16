@@ -28,6 +28,7 @@ running = True
 
 # A button to save the image
 saveButton = Button(10, 10, 100, 50, (0, 128, 0), "Save", lambda: save_image(screen, root))
+tracePoints = []
 
 # window running loop
 while running:
@@ -49,8 +50,11 @@ while running:
         running = False
 
     # if the tracing key is pressed run the tracing function
-    if tracing:
-        pass
+    while tracing:
+        tracePoints.append(event.pos)
+
+        if not tracing:
+            running = False
 
     saveButton.draw(screen)
     pygame.display.flip()
