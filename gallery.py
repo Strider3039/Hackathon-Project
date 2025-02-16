@@ -27,20 +27,6 @@ def open_gallery(screen):
         image = pygame.transform.scale(image, thumbnail_size)
         screen.blit(image, (x, y))
 
-        # Create a delete button for each thumbnail
-        delete_button = pygame.Rect(x + thumbnail_size[0] - 20, y, 20, 20)
-        pygame.draw.rect(screen, (255, 0, 0), delete_button)
-        font = pygame.font.Font(None, 20)
-        text_surface = font.render("x", True, (255, 255, 255))
-        screen.blit(text_surface, (x + thumbnail_size[0] - 15, y))
-
-        # Check for delete button click
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if delete_button.collidepoint(event.pos):
-                    os.remove(image_path)
-                    open_gallery(screen)  # Refresh the gallery
-                    return
 
         x += thumbnail_size[0] + spacing
         if x + thumbnail_size[0] + margin > screen.get_width():
