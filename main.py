@@ -54,41 +54,54 @@ class StickerMaker:
         self.canvas.bind("<Motion>", self.draw)
 
     def draw(self, event):
-        """Record points while Shift is held down."""
+        
+        # draw a line from the current mouse position to the next
         if self.tracing:
             self.points.append((event.x, event.y))
+            # if there are more than 2 points, draw a red line between the last two points
             if len(self.points) > 1:
                 self.canvas.create_line(self.points[-2], self.points[-1], fill="red", width=2)
+            # if a polygon exists, delete it and create a new one with the updated points
             if self.polygon:
                 self.canvas.delete(self.polygon)
             self.polygon = self.canvas.create_polygon(self.points, outline="blue", fill="lightblue", stipple="gray50")
 
     def capture_snip(self, event):
-        """Capture and save the snipped image when Shift is released."""
+        # when done tracing, unbind the mouse motion on the canvas,
+        # capture the snip and save it to a file
         self.tracing = False
         self.canvas.unbind("<Motion>")
         self.snip_window.withdraw()
 
+        # get the full dimensions of the screen
         x, y, w, h = 0, 0, self.snip_window.winfo_screenwidth(), self.snip_window.winfo_screenheight()
+        # take a screenshot of the screen using pyautogui
         img = pyautogui.screenshot(region=(x, y, w, h))
+        # convert the screenshot to a numpy array and then to a cv2 image
         img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
 
+        # create a mask of the polygon drawn on the canvas
         mask = np.zeros((h, w), dtype=np.uint8)
+        # if there are more than 2 points, fill the polygon with white
         if len(self.points) > 2:
             cv2.fillPoly(mask, [np.array(self.points, dtype=np.int32)], 255)
 
+        # apply the mask to the image to get the snip
         result = cv2.bitwise_and(img, img, mask=mask)
 
+        # if the Gallery folder doesn't exist, create it
         save_path = "Gallery"
         if not os.path.exists(save_path):
             os.makedirs(save_path)
 
+        # save the snip to a file with a timestamp
         timestamp = int(time.time())
         file_name = os.path.join(save_path, f"snip_{timestamp}.png")
         cv2.imwrite(file_name, result)
 
         print(f"image saved to {file_name}")
 
+        # destroy cv2 windows and the snip window
         cv2.destroyAllWindows()
         self.snip_window.destroy()
 
@@ -96,6 +109,8 @@ class StickerMaker:
 
 
 # Create and launch the application
+# mainloop() is an infinite loop used to run the application, 
+# wait for an event to occur and process the event till the window is not closed.
 root = tk.Tk()
 app = StickerMaker(root)
 root.mainloop()
