@@ -80,6 +80,8 @@ class StickerMaker:
         cv2.destroyAllWindows()
         self.snip_window.destroy()
 
+        self.root.deiconify()
+
 
 # Create and launch the application
 root = tk.Tk()
