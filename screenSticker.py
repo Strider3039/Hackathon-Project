@@ -53,11 +53,13 @@ class DraggableSticker:
     # Size up the sticker
     def size_up(self, event):
         self.scale_factor *= 1.1  # Zoom in
+        self.scale_factor = min(self.scale_factor, 3.0)  # Limit max size
         self.resize_sticker()
 
     # Size down the sticker
     def size_down(self, event):
         self.scale_factor *= 0.9  # Zoom out
+        self.scale_factor = max(self.scale_factor, 0.5)  # Limit min size
         self.resize_sticker()
 
     # Resize the sticker
@@ -78,32 +80,55 @@ class StickerGallery:
         self.root = root
         self.gallery_path = gallery_path
 
+        # Create the gallery window
         self.gallery_window = tk.Toplevel(root)
         self.gallery_window.title("Sticker Gallery")
-        self.gallery_window.geometry("400x300")
+        self.gallery_window.geometry("600x400")
+
+        # Create a close button for the gallery window
+        close_button = tk.Button(self.gallery_window, text="Close", command=self.close_gallery)
+        close_button.pack(pady=10)
+
+        # Create a frame for the thumbnails grid
+        self.thumbnail_frame = tk.Frame(self.gallery_window)
+        self.thumbnail_frame.pack(fill=tk.BOTH, expand=True)
 
         self.load_stickers()
         self.root.withdraw()
 
     # Load stickers from the gallery folder
     def load_stickers(self):
+        if not os.path.exists(self.gallery_path):
+            tk.Label(self.gallery_window, text="Gallery folder not found!").pack()
+            return
+
         sticker_files = [f for f in os.listdir(self.gallery_path) if f.endswith(".png")]
         if not sticker_files:
             tk.Label(self.gallery_window, text="No stickers found!").pack()
             return
 
-        # Create buttons for each sticker
+        # Create buttons with thumbnails for each sticker
+        row = 0
+        col = 0
         for sticker in sticker_files:
             sticker_path = os.path.join(self.gallery_path, sticker)
-            img = Image.open(sticker_path).resize((100, 100), Image.LANCZOS)
+            img = Image.open(sticker_path).resize((100, 100), Image.LANCZOS)  # Resize for thumbnail
             img_tk = ImageTk.PhotoImage(img)
             # Create a button with the image and a command to place the sticker
-            btn = tk.Button(self.gallery_window, image=img_tk, command=lambda p=sticker_path: self.place_sticker(p))
-            btn.image = img_tk
-            btn.pack(padx=5, pady=5)
+            btn = tk.Button(self.thumbnail_frame, image=img_tk, command=lambda p=sticker_path: self.place_sticker(p))
+            btn.image = img_tk  # Store reference to prevent garbage collection
+            btn.grid(row=row, column=col, padx=5, pady=5)  # Grid layout for thumbnails
+            col += 1
+            if col == 5:  # Create a new row after 5 thumbnails
+                col = 0
+                row += 1
 
     def place_sticker(self, sticker_path):
         DraggableSticker(sticker_path, position=(200, 200))
+
+    # Close the gallery window
+    def close_gallery(self):
+        self.gallery_window.destroy()
 
 root = tk.Tk()
 StickerGallery(root)
