@@ -5,6 +5,10 @@ from button import Button
 BLUE = (0, 71, 171)
 BACKGROUND_COLOR = (169, 169, 169)
 
+BUTTON_WIDTH = 300
+BUTTON_HEIGHT = 50
+BUTTON_PADDING = 20
+    
 class State(Enum):
     MENU_STATE = "menuState"
     TRACE_STATE = "traceState"
@@ -32,7 +36,6 @@ class StateManager:
     def draw(self, screen):
         self.currentState.draw(screen)
 
-    
 class MenuState:
     
     def __init__(self, screen):
@@ -41,9 +44,9 @@ class MenuState:
         self.screenWidth = pygame.display.Info().current_w
         self.screenHeight = pygame.display.Info().current_h
         
-        self.newStickerButton = Button(self.screenWidth/2, self.screenHeight/4, 100, 50, BLUE, "Trace Sticker")
-        self.galleryButton  = Button(self.screenWidth/2, self.screenHeight/2, 100, 50, BLUE, "Gallery")
-        self.exitButton = Button(self.screenWidth/2, self.screenHeight, 100, 50, BLUE, "Exit")
+        self.newStickerButton = Button((self.screenWidth/2) - (BUTTON_WIDTH / 2), self.screenHeight/4, BUTTON_WIDTH, BUTTON_HEIGHT, BLUE, "Trace Sticker")
+        self.galleryButton  = Button((self.screenWidth/2) - (BUTTON_WIDTH / 2), self.newStickerButton.get_pos()[1] + BUTTON_PADDING, BUTTON_WIDTH, BUTTON_HEIGHT, BLUE, "Gallery")
+        self.exitButton = Button((self.screenWidth/2) - (BUTTON_WIDTH / 2), self.galleryButton.get_pos()[1] + BUTTON_PADDING, BUTTON_WIDTH, BUTTON_HEIGHT, BLUE, "Exit")
     
     def handle_events(self, event, state_manager):
         if self.newStickerButton.check_click(event): state_manager.change_state(State.TRACE_STATE)
@@ -83,7 +86,7 @@ class GalleryState:
         self.screenWidth = pygame.display.Info().current_w
         self.screenHeight = pygame.display.Info().current_h
         
-        self.mainMenuButton = Button(self.screenWidth/2, self.screenHeight/4, 100, 50, BLUE, "Main Menu")
+        self.mainMenuButton = Button((self.screenWidth/2) - (BUTTON_WIDTH / 2), 20, BUTTON_WIDTH, BUTTON_HEIGHT, BLUE, "Main Menu")
 
     def update(self):
         pass
