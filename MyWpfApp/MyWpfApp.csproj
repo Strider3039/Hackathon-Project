@@ -1,11 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net9.0-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<LangVersion>11.0</LangVersion>
+		<!-- Add this to use C# 10+ -->
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- Include your images as resources -->
+		<Resource Include="Gallery\image*.jpg" />
+	</ItemGroup>
 
 </Project>
