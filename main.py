@@ -2,7 +2,11 @@ import tkinter as tk
 import pygame
 from button import Button
 import trace
+from fileSaver import save_image
 
+# Initialize Tkinter root
+root = tk.Tk()
+root.withdraw() # This will hide the root window
 
 # gets user system screen width and height
 screenWidth = pygame.display.Info().current_w
@@ -22,6 +26,9 @@ pygame.display.flip()
 
 running = True
 
+#A button to save the image
+saveButton = Button(10, 10, 100, 50, (0, 128, 0), "Save", lambda: save_image(screen, root))
+
 # window running loop
 while running:
 
@@ -34,6 +41,9 @@ while running:
         # Check for QUIT event       
         if event.type == pygame.QUIT: 
             running = False
+
+        # Check for button click event
+        saveButton.check_click(event)
         
     if keys[pygame.K_ESCAPE]:
         running = False
@@ -41,3 +51,6 @@ while running:
     # if the tracing key is pressed run the tracing function
     if tracing:
         pass
+
+    saveButton.draw(screen)
+    pygame.display.flip()
