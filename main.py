@@ -4,6 +4,7 @@ import pyautogui
 import numpy as np
 import cv2
 import time
+import win32
 
 # test 1
 
@@ -115,8 +116,16 @@ class StickerMaker:
             file_name = filename_entry.get()
             # if the filename is not empty, save the image to the Gallery folder
             if file_name:
+                # Find the bounding box of the non-transparent pixels
+                b, g, r, alpha = cv2.split(image)
+                coords = cv2.findNonZero(alpha)
+                x, y, w, h = cv2.boundingRect(coords)
+
+                # Crop the image to the bounding box
+                cropped_image = image[y:y+h, x:x+w]
+
                 full_path = os.path.join(save_path, f"{file_name}.png")
-                cv2.imwrite(full_path, image)
+                cv2.imwrite(full_path, cropped_image)
                 print(f"Image saved to {full_path}")
                 filename_window.destroy()
                 self.snip_window.destroy()
