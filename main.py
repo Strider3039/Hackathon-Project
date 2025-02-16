@@ -55,6 +55,11 @@ while running:
 
         if not tracing:
             running = False
+            break
+
+    if tracePoints:
+        newSticker = tracePoints(screen, tracePoints, )
+
 
     saveButton.draw(screen)
     pygame.display.flip()
