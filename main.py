@@ -1,66 +1,85 @@
 import tkinter as tk
-import pygame
-from button import Button
-import traceLogic
-from fileSaver import save_image
+import os
+import pyautogui
+import numpy as np
+import cv2
+import time
 
 
-# Initialize Tkinter root
+class StickerMaker:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Sticker Maker")
+        self.root.geometry("200x200")
+
+        self.btn_new_sticker = tk.Button(self.root, text="New Sticker", command=self.start_snipping)
+        self.btn_new_sticker.pack(pady=20)
+
+    def start_snipping(self):
+        """Opens the snipping overlay."""
+        self.snip_window = tk.Toplevel(self.root)
+        self.snip_window.attributes("-fullscreen", True)
+        self.snip_window.attributes("-alpha", 0.3)
+
+        self.canvas = tk.Canvas(self.snip_window, cursor="circle", bg="gray")
+        self.canvas.pack(fill=tk.BOTH, expand=True)
+
+        self.points = []
+        self.tracing = False
+        self.tracing_line = None
+        self.polygon = None
+
+        self.snip_window.bind("<Shift_L>", self.start_tracing)
+        self.snip_window.bind("<KeyRelease-Shift_L>", self.capture_snip)
+
+    def start_tracing(self, event):
+        """Start recording points when Shift is pressed."""
+        self.tracing = True
+        self.points = []
+        self.canvas.delete("all")  # Clear previous traces
+        self.canvas.bind("<Motion>", self.draw)
+
+    def draw(self, event):
+        """Record points while Shift is held down."""
+        if self.tracing:
+            self.points.append((event.x, event.y))
+            if len(self.points) > 1:
+                self.canvas.create_line(self.points[-2], self.points[-1], fill="red", width=2)
+            if self.polygon:
+                self.canvas.delete(self.polygon)
+            self.polygon = self.canvas.create_polygon(self.points, outline="blue", fill="lightblue", stipple="gray50")
+
+    def capture_snip(self, event):
+        """Capture and save the snipped image when Shift is released."""
+        self.tracing = False
+        self.canvas.unbind("<Motion>")
+        self.snip_window.withdraw()
+
+        x, y, w, h = 0, 0, self.snip_window.winfo_screenwidth(), self.snip_window.winfo_screenheight()
+        img = pyautogui.screenshot(region=(x, y, w, h))
+        img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+
+        mask = np.zeros((h, w), dtype=np.uint8)
+        if len(self.points) > 2:
+            cv2.fillPoly(mask, [np.array(self.points, dtype=np.int32)], 255)
+
+        result = cv2.bitwise_and(img, img, mask=mask)
+
+        save_path = "Gallery"
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
+
+        timestamp = int(time.time())
+        file_name = os.path.join(save_path, f"snip_{timestamp}.png")
+        cv2.imwrite(file_name, result)
+
+        print(f"image saved to {file_name}")
+
+        cv2.destroyAllWindows()
+        self.snip_window.destroy()
+
+
+# Create and launch the application
 root = tk.Tk()
-root.withdraw()  # This will hide the root window
-
-# gets user system screen width and height
-screenWidth = pygame.display.Info().current_w
-screenHeight = pygame.display.Info().current_h
-
-backgroundColor = (169, 169, 169)
-
-# set screen size
-screen = pygame.display.set_mode((int(screenWidth / 2), int(screenHeight / 2)))
-
-# window name
-pygame.display.set_caption("Sticker Maker")
-screen.fill(backgroundColor)
-
-# update screen information
-pygame.display.flip()
-
-running = True
-
-# A button to save the image
-saveButton = Button(10, 10, 100, 50, (0, 128, 0), "Save", lambda: save_image(screen, root))
-tracePoints = []
-
-# window running loop
-while running:
-
-    # a list of true or false bools based on if the key provided is pressed or not
-    # updated ever iteration
-    keys = pygame.key.get_pressed()
-    tracing = keys[pygame.K_LSHIFT]
-
-    for event in pygame.event.get():
-        # Check for QUIT event
-        if event.type == pygame.QUIT:
-            running = False
-
-        # Check for button click event
-        saveButton.check_click(event)
-
-    if keys[pygame.K_ESCAPE]:
-        running = False
-
-    
-    if tracing:
-
-        # if the tracing key is pressed, start recording coordinates
-        while keys[pygame.MOUSEMOTION]:
-            tracePoints.append(pygame.mouse.get_pos())
-        # if the distance is less than 50 pixels continue with the png creation
-        if tracePoints and traceLogic.distance_calc(tracePoints[0], tracePoints[-1]) < 50:
-            traceLogic.trace_png(screen, tracePoints)
-
-
-
-    saveButton.draw(screen)
-    pygame.display.flip()
+app = StickerMaker(root)
+root.mainloop()
