@@ -20,5 +20,16 @@ def trace_points(screen, points, filename):
     # SRCALPHA makes the image transparent upon creation
     sticker_surface = pygame.Surface((width, height), pygame.SRCALPHA)
 
-    #
+    # copy the pixels on screen within the bounding box
     sticker_surface.blit(screen, (0, 0), (min_x, min_y, width, height))
+    # create an empty mask to capture the shape using pygames polygon object
+    mask_surface = pygame.Surface((width, height), pygame.SRCALPHA)
+    # create a polygon object with parameters surface, color, and points
+    # make a list of local coordinates, done by recording the difference between the current and min values of each x and y
+    # mean x_min, y_min would now be (0,0) the origin
+    pygame.draw.polygon(mask_surface, (255,255,255,255), [(x - min_x, y - min_y) for x, y in points])
+
+    # apply the mask to the original surface to get only the traced shape
+    sticker_surface.blit(mask_surface, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
+
+    return sticker_surface
