@@ -7,18 +7,16 @@ import time
 import win32
 
 # test 1
-
+def test():
+    root = tk.Tk()
+    app = StickerMaker(root)
+    root.mainloop()
+    
 class StickerMaker:
     def __init__(self, root):
         # initialize the tkinter window root, title, and size
         self.root = root
-        self.root.title("Sticker Maker")
-        self.root.geometry("200x200")
-
-        # create a new tk button widget that runs the start_snipping function when pressed
-        self.btn_new_sticker = tk.Button(self.root, text="New Sticker", command=self.start_snipping)
-        # add a 20 pixel margin between the button and top of window
-        self.btn_new_sticker.pack(pady=20)
+        self.start_snipping()
 
     def start_snipping(self):
         self.root.withdraw()
@@ -138,7 +136,5 @@ class StickerMaker:
 # Create and launch the application
 # mainloop() is an infinite loop used to run the application, 
 # wait for an event to occur and process the event till the window is not closed.
-root = tk.Tk()
-app = StickerMaker(root)
-root.mainloop()
+test()
 
