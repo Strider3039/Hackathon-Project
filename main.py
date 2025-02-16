@@ -3,9 +3,6 @@ import os
 import pyautogui
 import numpy as np
 import cv2
-# import win32com.client
-import ahk
-
 
 def test():
     root = tk.Tk()
