@@ -3,11 +3,10 @@ import os
 import pyautogui
 import numpy as np
 import cv2
-import time
-import win32com.client 
+# import win32com.client
 import ahk
 
-# test 1
+
 def test():
     root = tk.Tk()
     app = StickerMaker(root)
@@ -42,6 +41,9 @@ class StickerMaker:
         # bind mouse actions to the canvas functions
         self.snip_window.bind("<Button-1>", self.start_tracing)
         self.snip_window.bind("<ButtonRelease-1>", self.capture_snip)
+
+        # exit out of the program if the Escape key is pressed
+        self.snip_window.bind("<Escape>", lambda event: exit())
 
 
     def start_tracing(self, event):
@@ -103,7 +105,7 @@ class StickerMaker:
         # create a new top level window to ask for a filename
         filename_window = tk.Toplevel(self.root)
         filename_window.title("Save Sticker")
-        filename_window.geometry("300x150")
+        filename_window.geometry("400x150")
 
         # create a label and entry widget for the filename
         tk.Label(filename_window, text="Type file name and press enter or create:").pack(pady=5)
@@ -125,19 +127,12 @@ class StickerMaker:
 
                 full_path = os.path.join(save_path, f"{file_name}.png")
                 cv2.imwrite(full_path, cropped_image)
-                print(f"Image saved to {full_path}")
                 filename_window.destroy()
                 self.snip_window.destroy()
-                self.root.deiconify()
+                self.root.quit()
 
         # bind the Enter key to the save_image function
         filename_entry.bind("<Return>", lambda event: save_image())
         tk.Button(filename_window, text="Create", command=save_image).pack(pady=5)
 
-
-# Create and launch the application
-# mainloop() is an infinite loop used to run the application, 
-# wait for an event to occur and process the event till the window is not closed.
 test()
-
-
