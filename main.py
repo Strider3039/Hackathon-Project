@@ -5,7 +5,7 @@ import numpy as np
 import cv2
 import time
 
-# test
+# test 1
 
 class StickerMaker:
     def __init__(self, root):
