@@ -86,8 +86,10 @@ class StickerMaker:
         if len(self.points) > 2:
             cv2.fillPoly(mask, [np.array(self.points, dtype=np.int32)], 255)
 
-        # apply the mask to the image to get the snip
-        result = cv2.bitwise_and(img, img, mask=mask)
+         # Create a transparent image
+        b, g, r = cv2.split(img)
+        alpha = mask  # Use mask as alpha channel
+        transparent_img = cv2.merge([b, g, r, alpha])
 
         # if the Gallery folder doesn't exist, create it
         save_path = "Gallery"
@@ -95,18 +97,33 @@ class StickerMaker:
             os.makedirs(save_path)
 
         # save the snip to a file with a timestamp
-        timestamp = int(time.time())
-        file_name = os.path.join(save_path, f"snip_{timestamp}.png")
-        cv2.imwrite(file_name, result)
+        self.ask_filename(transparent_img, save_path)
 
-        print(f"image saved to {file_name}")
+    def ask_filename(self, image, save_path):
+        # create a new top level window to ask for a filename
+        filename_window = tk.Toplevel(self.root)
+        filename_window.title("Save Sticker")
+        filename_window.geometry("300x150")
 
-        # destroy cv2 windows and the snip window
-        cv2.destroyAllWindows()
-        self.snip_window.destroy()
+        # create a label and entry widget for the filename
+        tk.Label(filename_window, text="Type file name and press enter:").pack(pady=5)
+        filename_entry = tk.Entry(filename_window)
+        filename_entry.pack(pady=5)
 
-        # show the main window again
-        self.root.deiconify()
+        # create a button to save the image
+        def save_image():
+            file_name = filename_entry.get()
+            # if the filename is not empty, save the image to the Gallery folder
+            if file_name:
+                full_path = os.path.join(save_path, f"{file_name}.png")
+                cv2.imwrite(full_path, image)
+                print(f"Image saved to {full_path}")
+                filename_window.destroy()
+                self.snip_window.destroy()
+                self.root.deiconify()
+
+        # bind the Enter key to the save_image function
+        filename_entry.bind("<Return>", lambda event: save_image())
 
 
 # Create and launch the application
