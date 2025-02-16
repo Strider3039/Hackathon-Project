@@ -16,6 +16,8 @@ class StickerMaker:
         self.btn_new_sticker.pack(pady=20)
 
     def start_snipping(self):
+        self.root.withdraw()
+
         """Opens the snipping overlay."""
         self.snip_window = tk.Toplevel(self.root)
         self.snip_window.attributes("-fullscreen", True)
@@ -29,8 +31,8 @@ class StickerMaker:
         self.tracing_line = None
         self.polygon = None
 
-        self.snip_window.bind("<Shift_L>", self.start_tracing)
-        self.snip_window.bind("<KeyRelease-Shift_L>", self.capture_snip)
+        self.snip_window.bind("<Button-1>", self.start_tracing)
+        self.snip_window.bind("<ButtonRelease-1>", self.capture_snip)
 
     def start_tracing(self, event):
         """Start recording points when Shift is pressed."""
