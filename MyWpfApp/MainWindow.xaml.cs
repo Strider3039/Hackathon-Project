@@ -10,40 +10,15 @@ namespace WpfApp1
     {
         public MainWindow()
         {
-            InitializeComponent();
-        }
-
-        private TcpClient client;  // Class-level field to hold the TcpClient
-        private NetworkStream stream;  // Class-level field to hold the NetworkStream
-
-        private void CloseConnectionToPython()
-        {
-            this.stream.Close();
-            this.client.Close();
-        }
-
-        // Method to send message to the server
-        public void sendMessage(string message)
-        {
-            if (client != null && client.Connected && stream != null && stream.CanWrite)
-            {
-                byte[] messageBytes = Encoding.ASCII.GetBytes(message);
-                stream.Write(messageBytes, 0, messageBytes.Length);  // Send message to server
-            }
-            else
-            {
-                MessageBox.Show("Connection is closed or stream is not available.");
-                // Optionally, try to reconnect here
-               // ConnectToPythonBackend();
-            }
+            //InitializeComponent();
         }
 
         // Button click event to send "Make Sticker" message
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            this.WindowState = System.Windows.WindowState.Minimized;
+            this.Visibility = Visibility.Hidden;
             RunPythonScript_Click(sender, e);
-            this.WindowState = System.Windows.WindowState.Normal;
+            this.Visibility = Visibility.Visible;
         }
 
 
@@ -77,21 +52,6 @@ namespace WpfApp1
             }
         }
         
-    
-
-    // Clean up resources when the window is closed
-    private void Window_Closed(object sender, EventArgs e)
-        {
-            if (stream != null)
-            {
-                stream.Close();
-            }
-            if (client != null)
-            {
-                client.Close();
-            }
-        }
-
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
 
