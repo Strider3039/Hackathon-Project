@@ -8,37 +8,48 @@ import time
 
 class StickerMaker:
     def __init__(self, root):
+        # initialize the tkinter window root, title, and size
         self.root = root
         self.root.title("Sticker Maker")
         self.root.geometry("200x200")
 
+        # create a new tk button widget that runs the start_snipping function when pressed
         self.btn_new_sticker = tk.Button(self.root, text="New Sticker", command=self.start_snipping)
+        # add a 20 pixel margin between the button and top of window
         self.btn_new_sticker.pack(pady=20)
 
     def start_snipping(self):
         self.root.withdraw()
 
-        """Opens the snipping overlay."""
+        # open snipping top level window overlay
         self.snip_window = tk.Toplevel(self.root)
+        # set window to fullscreen and 30% opacity
         self.snip_window.attributes("-fullscreen", True)
         self.snip_window.attributes("-alpha", 0.3)
 
+        # create a canvas widget to trace on and change the cursor to a circle
         self.canvas = tk.Canvas(self.snip_window, cursor="circle", bg="gray")
+        # make sure the canvas fills the entire window
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
+        # initialize variables for tracing
         self.points = []
         self.tracing = False
         self.tracing_line = None
         self.polygon = None
 
+        # bind mouse actions to the canvas functions
         self.snip_window.bind("<Button-1>", self.start_tracing)
         self.snip_window.bind("<ButtonRelease-1>", self.capture_snip)
 
+
     def start_tracing(self, event):
-        """Start recording points when Shift is pressed."""
+        # start tracing when the left mouse button is pressed, called above
+        # delete all canvas and point info first
         self.tracing = True
         self.points = []
         self.canvas.delete("all")  # Clear previous traces
+        # draw a line from the current mouse position to the next
         self.canvas.bind("<Motion>", self.draw)
 
     def draw(self, event):
