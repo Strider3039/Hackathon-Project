@@ -1,0 +1,86 @@
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+using System;
+using System.Net.Sockets;
+using System.Text;
+using System.Windows;
+
+namespace WpfApp1
+{
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+            ConnectToPythonBackend();
+        }
+
+        private TcpClient client;  // Class-level field to hold the TcpClient
+        private NetworkStream stream;  // Class-level field to hold the NetworkStream
+
+        // Method to establish connection to the Python server
+        private void ConnectToPythonBackend()
+        {
+            try
+            {
+                client = new TcpClient("localhost", 65432);  // Create the TCP client
+                stream = client.GetStream();  // Get the network stream
+
+                // Send message to the server
+                byte[] message = Encoding.ASCII.GetBytes("Hello from C#!");
+                stream.Write(message, 0, message.Length);
+
+                // Receive response
+                byte[] buffer = new byte[1024];
+                int bytesRead = stream.Read(buffer, 0, buffer.Length);
+                string response = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                MessageBox.Show(response);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+        }
+
+        public void sendMessege(string message)
+        {
+            if (stream != null && stream.CanWrite)
+            {
+                byte[] messageBytes = Encoding.ASCII.GetBytes(message);
+                stream.Write(messageBytes, 0, messageBytes.Length);  // Send message to server
+            }
+            else
+            {
+                MessageBox.Show("Stream is not available.");
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            sendMessege("Make Sticker");
+        }
+    }
+}
