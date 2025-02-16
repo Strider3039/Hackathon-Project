@@ -1,11 +1,7 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Net.Sockets;
+﻿using System;
 using System.Diagnostics;
-using System;
-using System.Threading.Tasks;  // For Task class
-
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace WpfApp1
 {
@@ -13,92 +9,76 @@ namespace WpfApp1
     {
         public MainWindow()
         {
-           // InitializeComponent();
+            InitializeComponent(); // Ensure UI components are initialized
         }
 
         // Button click event to send "Make Sticker" message
-        private void Button_Click_3(object sender, RoutedEventArgs e)
+        private async void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            
             this.Visibility = Visibility.Hidden;
-            RunPythonScript_Click(sender, e);
+            await RunPythonScriptAsync(@"..\main.py");
             this.Visibility = Visibility.Visible;
         }
 
-        private async void RunPythonScript_Click(object sender, RoutedEventArgs e)
+        // Asynchronous method to run a Python script
+        private async Task RunPythonScriptAsync(string scriptPath)
         {
             try
             {
-                ProcessStartInfo psi = new ProcessStartInfo
+                await Task.Run(() =>
                 {
-                    FileName = "python",  // If Python isn't in PATH, provide full path to python.exe
-                    Arguments = @"..\main.py",  // Change this to your Python script's filename
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                };
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = "python",  // If Python isn't in PATH, provide full path to python.exe
+                        Arguments = scriptPath,  // Python script file path
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
 
-                using (Process process = new Process { StartInfo = psi })
-                {
-                    process.Start();
-                    string output = process.StandardOutput.ReadToEnd();
-                    string error = process.StandardError.ReadToEnd();
-                    process.WaitForExit();
-                }
+                    using (Process process = new Process { StartInfo = psi })
+                    {
+                        process.Start();
+                        string output = process.StandardOutput.ReadToEnd();
+                        string error = process.StandardError.ReadToEnd();
+                        process.WaitForExit();
+
+                        // Optionally, process the output or error
+                        if (!string.IsNullOrWhiteSpace(error))
+                        {
+                            // Use Dispatcher to update the UI thread
+                            Dispatcher.Invoke(() => MessageBox.Show("Error: " + error));
+                        }
+                        // If needed, you can also show the output:
+                        // Dispatcher.Invoke(() => MessageBox.Show("Output: " + output));
+                    }
+                });
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                Dispatcher.Invoke(() => MessageBox.Show("Error: " + ex.Message));
             }
         }
 
-           private async void RunPythonScript_Click2(object sender, RoutedEventArgs e)
+        // Button click event to display gallery
+        private async void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                ProcessStartInfo psi = new ProcessStartInfo
-                {
-                    FileName = "python",  // If Python isn't in PATH, provide full path to python.exe
-                    Arguments = @"..\screenSticker.py",  // Change this to your Python script's filename
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                };
-
-                using (Process process = new Process { StartInfo = psi })
-                {
-                    process.Start();
-                    string output = process.StandardOutput.ReadToEnd();
-                    string error = process.StandardError.ReadToEnd();
-                    process.WaitForExit();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
-            }
+            await RunPythonScriptAsync(@"..\screenSticker.py");
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            // display gallery
-            RunPythonScript_Click2(sender, e);
-        }
-
-        // end program button
+        // End program button
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-           this.Close();
+            this.Close();
         }
 
+        // Open new window button
         private void OpenNewWindow_Click(object sender, RoutedEventArgs e)
         {
             NewWindow newWindow = new NewWindow();
             newWindow.Show();  // Open the new window
-            //this.Hide();  // Hide the current window (instead of closing it)
+            // Optionally hide the current window: this.Hide();
         }
     }
 }
-
