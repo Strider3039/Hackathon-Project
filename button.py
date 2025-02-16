@@ -9,7 +9,7 @@ font = pygame.font.Font(None, 40)
 
 class Button:
     
-    def __init__(self, x, y, width, height, button_color, text, action=None):
+    def __init__(self, x, y, width, height, button_color, text):
         self.rect = pygame.Rect(x, y, width, height)
         self.buttonColor = button_color
         
@@ -17,7 +17,6 @@ class Button:
         self.hoverButtonColor = tuple(min(255, c + 50) for c in button_color)  # Correct hover color calculation
         
         self.text = text
-        self.action = action
 
     def draw(self, screen):
         mouse_pos = pygame.mouse.get_pos()
@@ -33,5 +32,6 @@ class Button:
 
     def check_click(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.rect.collidepoint(event.pos) and self.action:
-                self.action()
+            if self.rect.collidepoint(event.pos):
+                return True
+        return False
