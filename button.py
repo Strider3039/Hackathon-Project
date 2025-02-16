@@ -35,3 +35,7 @@ class Button:
             if self.rect.collidepoint(event.pos):
                 return True
         return False
+
+    # returns bottom left point
+    def get_pos(self):
+        return self.rect.bottomleft
