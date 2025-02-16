@@ -99,8 +99,6 @@ class StickerMaker:
         file_name = os.path.join(save_path, f"snip_{timestamp}.png")
         cv2.imwrite(file_name, result)
 
-        print(f"image saved to {file_name}")
-
         # destroy cv2 windows and the snip window
         cv2.destroyAllWindows()
         self.snip_window.destroy()
