@@ -4,7 +4,8 @@ import pyautogui
 import numpy as np
 import cv2
 import time
-import win32
+import win32com.client 
+import ahk
 
 # test 1
 
@@ -107,7 +108,7 @@ class StickerMaker:
         filename_window.geometry("300x150")
 
         # create a label and entry widget for the filename
-        tk.Label(filename_window, text="Type file name and press enter:").pack(pady=5)
+        tk.Label(filename_window, text="Type file name and press enter or create:").pack(pady=5)
         filename_entry = tk.Entry(filename_window)
         filename_entry.pack(pady=5)
 
@@ -133,6 +134,7 @@ class StickerMaker:
 
         # bind the Enter key to the save_image function
         filename_entry.bind("<Return>", lambda event: save_image())
+        tk.Button(filename_window, text="Create", command=save_image).pack(pady=5)
 
 
 # Create and launch the application
@@ -141,4 +143,5 @@ class StickerMaker:
 root = tk.Tk()
 app = StickerMaker(root)
 root.mainloop()
+
 
