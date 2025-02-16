@@ -3,6 +3,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Net.Sockets;
 using System.Diagnostics;
+using System;
+using System.Threading.Tasks;  // For Task class
+
 
 namespace WpfApp1
 {
@@ -10,19 +13,19 @@ namespace WpfApp1
     {
         public MainWindow()
         {
-            //InitializeComponent();
+           // InitializeComponent();
         }
 
         // Button click event to send "Make Sticker" message
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
+            
             this.Visibility = Visibility.Hidden;
             RunPythonScript_Click(sender, e);
             this.Visibility = Visibility.Visible;
         }
 
-
-        private void RunPythonScript_Click(object sender, RoutedEventArgs e)
+        private async void RunPythonScript_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -42,8 +45,6 @@ namespace WpfApp1
                     string output = process.StandardOutput.ReadToEnd();
                     string error = process.StandardError.ReadToEnd();
                     process.WaitForExit();
-
-                    MessageBox.Show("Output: " + output + "\nError: " + error);
                 }
             }
             catch (Exception ex)
@@ -51,16 +52,24 @@ namespace WpfApp1
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
-        
+
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-
+            // display gallery
+           // OpenNewWindow_Click(sender, e);
         }
 
         // end program button
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-           // sendMessage("Kill");
+           this.Close();
+        }
+
+        private void OpenNewWindow_Click(object sender, RoutedEventArgs e)
+        {
+            NewWindow newWindow = new NewWindow();
+            newWindow.Show();  // Open the new window
+            //this.Hide();  // Hide the current window (instead of closing it)
         }
     }
 }
