@@ -1,12 +1,24 @@
 import pygame
 import os
 import math
+from tkinter import simpledialog
+
+def save_image(image, root):
+    # Create a gallery folder in case it doesn't exist
+    if not os.path.exists("gallery"):
+        os.makedirs("gallery")
+    
+    # Ask the user for the file name
+    fileName = simpledialog.askstring("Save Image", "Enter the file name:", parent=root)
+    if fileName:
+        filePath = os.path.join('gallery', f"{fileName}.png")
+        pygame.image.save(image, filePath)
 
 def distance_calc(point1, point2):
     return math.sqrt((point1[0]-point2[0])**2 + (point1[1]-point2[1])**2)
     
 
-def trace_points(screen, points):
+def trace_png(screen, points):
     
     if not points: return
 
@@ -39,9 +51,4 @@ def trace_points(screen, points):
     sticker_surface.blit(mask_surface, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
 
     # Save the traced image to the gallery folder
-    if not os.path.exists("gallery"):
-        os.makedirs("gallery")
-    file_path = os.path.join("gallery", filename)
-    pygame.image.save(sticker_surface, file_path)
-
-    return sticker_surface
+    save_image(sticker_surface)

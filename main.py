@@ -50,15 +50,15 @@ while running:
     if keys[pygame.K_ESCAPE]:
         running = False
 
-    # if the tracing key is pressed, start recording coordinates
+    
     if tracing:
 
+        # if the tracing key is pressed, start recording coordinates
         while keys[pygame.MOUSEMOTION]:
             tracePoints.append(pygame.mouse.get_pos())
-
+        # if the distance is less than 50 pixels continue with the png creation
         if tracePoints and traceLogic.distance_calc(tracePoints[0], tracePoints[-1]) < 50:
-
-            newSticker traceLogic.trace_points(screen, tracePoints)
+            traceLogic.trace_png(screen, tracePoints)
 
 
 
