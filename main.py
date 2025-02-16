@@ -1,8 +1,9 @@
 import tkinter as tk
 import pygame
 from button import Button
-import trace
+import traceLogic
 from fileSaver import save_image
+
 
 # Initialize Tkinter root
 root = tk.Tk()
@@ -49,16 +50,16 @@ while running:
     if keys[pygame.K_ESCAPE]:
         running = False
 
-    # if the tracing key is pressed run the tracing function
-    while tracing:
-        tracePoints.append(event.pos)
+    # if the tracing key is pressed, start recording coordinates
+    if tracing:
 
-        if not tracing:
-            running = False
-            break
+        while keys[pygame.MOUSEMOTION]:
+            tracePoints.append(pygame.mouse.get_pos())
 
-    if tracePoints:
-        newSticker = tracePoints(screen, tracePoints, )
+        if tracePoints and traceLogic.distance_calc(tracePoints[0], tracePoints[-1]) < 50:
+
+            newSticker traceLogic.trace_points(screen, tracePoints)
+
 
 
     saveButton.draw(screen)
