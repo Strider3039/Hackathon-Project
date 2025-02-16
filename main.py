@@ -3,7 +3,7 @@ import os
 import pyautogui
 import numpy as np
 import cv2
-import win32com.client
+# import win32com.client
 import ahk
 
 
