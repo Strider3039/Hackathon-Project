@@ -1,6 +1,7 @@
 import pygame
 from enum import Enum
 from button import Button
+import gallery
 
 BLUE = (0, 71, 171)
 BACKGROUND_COLOR = (169, 169, 169)
@@ -12,7 +13,6 @@ BUTTON_PADDING = 20
 class State(Enum):
     MENU_STATE = "menuState"
     TRACE_STATE = "traceState"
-    GALLERY_STATE = "galleryState"
 
 class StateManager:
     
@@ -20,7 +20,6 @@ class StateManager:
         self.states = {
             State.MENU_STATE: MenuState(screen),
             State.TRACE_STATE: TraceState(screen),
-            State.GALLERY_STATE: GalleryState(screen)
         }
         self.currentState = self.states[State.MENU_STATE]
     
@@ -50,7 +49,7 @@ class MenuState:
     
     def handle_events(self, event, state_manager):
         if self.newStickerButton.check_click(event): state_manager.change_state(State.TRACE_STATE)
-        if self.galleryButton.check_click(event):    state_manager.change_state(State.GALLERY_STATE)
+        if self.galleryButton.check_click(event):    gallery.open_gallery()
         if self.exitButton.check_click(event):       exit()
         
         
@@ -76,24 +75,3 @@ class TraceState:
 
     def draw(self, screen):
         self.screen.fill(BACKGROUND_COLOR)
-        
-
-class GalleryState:
-    
-    def __init__(self, screen):
-        self.screen = screen
-        
-        self.screenWidth = pygame.display.Info().current_w
-        self.screenHeight = pygame.display.Info().current_h
-        
-        self.mainMenuButton = Button((self.screenWidth/2) - (BUTTON_WIDTH / 2), 20, BUTTON_WIDTH, BUTTON_HEIGHT, BLUE, "Main Menu")
-
-    def update(self):
-        pass
-    
-    def handle_events(self, event, state_manager):
-        if self.mainMenuButton.check_click(event) : state_manager.change_state(State.MENU_STATE)
-
-    def draw(self, screen):
-        self.screen.fill(BACKGROUND_COLOR)
-        self.mainMenuButton.draw(screen)
