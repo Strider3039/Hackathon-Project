@@ -50,8 +50,5 @@ def trace_png(screen, points):
     # apply the mask to the original surface to get only the traced shape
     sticker_surface.blit(mask_surface, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
 
-
-    
-
     # Save the traced image to the gallery folder
     save_image(sticker_surface)
