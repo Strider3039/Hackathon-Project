@@ -53,10 +53,38 @@ namespace WpfApp1
             }
         }
 
+           private async void RunPythonScript_Click2(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ProcessStartInfo psi = new ProcessStartInfo
+                {
+                    FileName = "python",  // If Python isn't in PATH, provide full path to python.exe
+                    Arguments = @"..\screenSticker.py",  // Change this to your Python script's filename
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                using (Process process = new Process { StartInfo = psi })
+                {
+                    process.Start();
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+                    process.WaitForExit();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             // display gallery
-           // OpenNewWindow_Click(sender, e);
+            RunPythonScript_Click2(sender, e);
         }
 
         // end program button
