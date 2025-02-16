@@ -10,21 +10,25 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button Content="New Sticker" HorizontalAlignment="Left" Margin="322,108,0,0" VerticalAlignment="Top" Height="52" Width="144" FontFamily="Segoe UI Black" FontSize="18" Click="Button_Click_3">
+        <Button Content="New Sticker" HorizontalAlignment="Left" Margin="322,108,0,0" VerticalAlignment="Top" Height="52" Width="144" FontFamily="Segoe UI Black" FontSize="18" Click="Button_Click_3" Background="#FF195CFF">
             <Button.Style>
                 <Style/>
             </Button.Style>
         </Button>
-        <Button Content="Gallery" HorizontalAlignment="Left" Margin="322,184,0,0" VerticalAlignment="Top" Height="52" Width="144" FontFamily="Segoe UI Black" FontSize="18" Click="Button_Click_2">
+        <Button Content="Gallery" HorizontalAlignment="Left" Margin="322,184,0,0" VerticalAlignment="Top" Height="52" Width="144" FontFamily="Segoe UI Black" FontSize="18" Click="Button_Click_2" Background="#FF195CFF">
             <Button.Style>
                 <Style/>
             </Button.Style>
         </Button>
-        <Button Content="Exit" HorizontalAlignment="Left" Margin="322,263,0,0" VerticalAlignment="Top" Height="52" Width="144" FontFamily="Segoe UI Black" FontSize="18" Click="Button_Click_1">
+        <Button Content="Exit" HorizontalAlignment="Left" Margin="322,263,0,0" VerticalAlignment="Top" Height="52" Width="144" FontFamily="Segoe UI Black" FontSize="18" Click="Button_Click_1" Background="#FF1D5EFC">
             <Button.Style>
                 <Style/>
             </Button.Style>
         </Button>
-        <Label Content="Stickler Maker" HorizontalAlignment="Center" Margin="0,27,0,0" VerticalAlignment="Top" Height="76" Width="418" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Segoe UI Variable Display Semibold" FontSize="36" FontWeight="Bold"/>
+        <Label Content="Stickler Maker" HorizontalAlignment="Center" Margin="0,27,0,0" VerticalAlignment="Top" Height="76" Width="418" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Segoe UI Variable Display Semibold" FontSize="48" FontWeight="Bold"/>
+        <Grid>
+            <Grid/>
+        </Grid>
     </Grid>
 </Window>
+
