@@ -53,13 +53,13 @@ class DraggableSticker:
     # Size up the sticker
     def size_up(self, event):
         self.scale_factor *= 1.1  # Zoom in
-        self.scale_factor = min(self.scale_factor, 3.0)  # Limit max size
+        self.scale_factor = min(self.scale_factor, 10.0)  # Limit max size
         self.resize_sticker()
 
     # Size down the sticker
     def size_down(self, event):
         self.scale_factor *= 0.9  # Zoom out
-        self.scale_factor = max(self.scale_factor, 0.5)  # Limit min size
+        self.scale_factor = max(self.scale_factor, 0.1)  # Limit min size
         self.resize_sticker()
 
     # Resize the sticker
